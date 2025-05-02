@@ -44,6 +44,7 @@ pub fn inst_source(input_path: &Path, output_path: &Path, inst_spec: &InstProjec
                             feature_min_specialization: is_main_module,
                             debugee_file_path: file_path_str,
                             line_inst: Some(*line),
+                            custom_type_serialization: true
                         };
                         inst_source_file(&path, &new_output_file, &ast_spec)?;
                     } else {
