@@ -61,28 +61,31 @@ impl Fold for InstContext {
     fn fold_block(&mut self, mut node: Block) -> Block {
         let mut stmts: Vec<Stmt> = vec![];
         for stmt in node.stmts {
-            // Instrumentation statements that come before stmt
-            let mut inst_stmts: Vec<Stmt> = vec![];
             let line_number = stmt.span().start().line;
-            let line_start_str = format!("-.!;LINE_START;{}", line_number);
-            inst_stmts.push(parse_quote! {
-                solana_program::log::sol_log(#line_start_str);
-            });
-            for ident in &self.bindings {
-                let ident_str = ident.to_string();
-                let print_var: Stmt = parse_quote! {
-                    crate::_solana_debugger_serialize::_SolanaDebuggerSerialize::_solana_debugger_serialize(&#ident, #ident_str);
+
+            // Instrumentation statements that come before stmt (but only if we're at the right line)
+            if line_number == self.line {
+                let mut inst_stmts: Vec<Stmt> = vec![];
+                let line_start_str = format!("-.!;LINE_START;{}", line_number);
+                inst_stmts.push(parse_quote! {
+                    solana_program::log::sol_log(#line_start_str);
+                });
+                for ident in &self.bindings {
+                    let ident_str = ident.to_string();
+                    let print_var: Stmt = parse_quote! {
+                        crate::_solana_debugger_serialize::_SolanaDebuggerSerialize::_solana_debugger_serialize(&#ident, #ident_str);
+                    };
+                    inst_stmts.push(print_var);
+                }
+                inst_stmts.push(parse_quote! {
+                    solana_program::log::sol_log("-.!;LINE_END");
+                });
+                let inst_block = Block {
+                    brace_token: syn::token::Brace::default(),
+                    stmts: inst_stmts
                 };
-                inst_stmts.push(print_var);
+                stmts.push(parse2::<Stmt>(quote!(#inst_block)).unwrap());
             }
-            inst_stmts.push(parse_quote! {
-                solana_program::log::sol_log("-.!;LINE_END");
-            });
-            let inst_block = Block {
-                brace_token: syn::token::Brace::default(),
-                stmts: inst_stmts
-            };
-            stmts.push(parse2::<Stmt>(quote!(#inst_block)).unwrap());
 
             // Get new local bindings introduced by this statement
             let in_scope_bindings = get_in_scope_bindings_from_stmt(&stmt);

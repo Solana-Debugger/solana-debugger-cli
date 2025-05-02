@@ -76,6 +76,10 @@ pub fn get_target_dir() -> PathBuf {
     get_cache_dir().join("target")
 }
 
+pub fn rm_target_dir() {
+    fs::remove_dir_all(get_target_dir()).unwrap()
+}
+
 pub fn get_config_path() -> PathBuf {
     get_cache_dir().join("config.json")
 }

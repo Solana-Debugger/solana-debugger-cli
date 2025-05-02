@@ -40,6 +40,8 @@ pub(crate) async fn process_var(location: &str, line: usize, name: Option<&str>)
     // Instrument
     //
 
+    eprintln!("Instrument...");
+
     let project_type = match debugee_project_info.is_workspace {
         false => InstInputProjectType::Package { program_path: debugee_project_info.program_path.clone() },
         true => InstInputProjectType::Workspace {
@@ -64,6 +66,10 @@ pub(crate) async fn process_var(location: &str, line: usize, name: Option<&str>)
     //
     // Compile
     //
+
+    //rm_target_dir();
+
+    eprintln!("Compile...");
 
     let compile_args = CompileProjectArgs {
         program_path: inst_info.program_path,
