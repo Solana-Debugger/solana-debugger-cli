@@ -10,5 +10,7 @@ pub(crate) fn process_init(program_path: &str, input_path: &str) -> Result<(), B
 
     config.write_to_file(&get_config_path())?;
 
+    rm_target_dir();
+
     Ok(())
 }

@@ -4,7 +4,7 @@ use std::process::{Command, Stdio};
 use cargo_metadata::diagnostic::DiagnosticLevel;
 use cargo_metadata::Message;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct CompileError {
     pub file_path: String,
     pub error_code: String,
@@ -31,7 +31,7 @@ pub async fn compile_sbf_with_errors(program_path: &Path, target_dir: Option<&Pa
     ];
 
     // Make sure we only compile the single lib target
-    cargo_build_args.extend(["--lib"]);
+    //cargo_build_args.extend(["--lib"]);
 
     // Enable debug output
     cargo_build_args.extend(["--message-format", "json,json-diagnostic-short"]);
@@ -91,9 +91,11 @@ pub async fn compile_sbf_with_errors(program_path: &Path, target_dir: Option<&Pa
     }
 
     let output = command.wait_with_output().map_err(|err| format!("Failed to get output of cargo: {}", err))?;
+    //dbg!(&output);
+    //dbg!(&errs);
 
     if !output.status.success() && errs.is_empty() {
-        Err("Compilation failed, but cargo-build-sbf didn't return compile errors")?;
+        Err("Compilation failed, but cargo build didn't return compile errors")?;
     }
 
     Ok(errs)

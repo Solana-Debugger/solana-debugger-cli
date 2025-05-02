@@ -5,6 +5,7 @@ use crate::utils::debugger_cache::*;
 use crate::utils::debugee_project_info::get_program_info;
 use crate::utils::program_input::*;
 use crate::instrument::*;
+use crate::output::*;
 
 pub(crate) async fn process_var(location: &str, line: usize, name: Option<&str>) -> Result<(), Box<dyn std::error::Error>> {
 
@@ -28,9 +29,12 @@ pub(crate) async fn process_var(location: &str, line: usize, name: Option<&str>)
         Err(format!("Debug location {} does not exist", location_path.display()))?
     }
 
-    let input = load_input_from_folder(&config.input_path).await?;
+    // Must be before load_input_from_folder
+    let output_log = set_output_logger()?;
 
-    //dbg!(&input);
+    let program_input = load_input_from_folder(&config.input_path).await?;
+
+    //dbg!(&program_input);
 
     let debugee_project_info = get_program_info(&config.program_path)?;
 
@@ -78,6 +82,23 @@ pub(crate) async fn process_var(location: &str, line: usize, name: Option<&str>)
     };
 
     compile_project(compile_args).await?;
+
+    //
+    // Output
+    //
+
+    eprintln!("Output...");
+
+    let program_output = generate_program_output(
+        &get_target_so_dir(),
+        &debugee_project_info.target_name,
+        program_input,
+        output_log
+    ).await?;
+
+    //dbg!(&program_output);
+
+    let line_vars = parse_program_output(program_output)?;
 
     Ok(())
 }

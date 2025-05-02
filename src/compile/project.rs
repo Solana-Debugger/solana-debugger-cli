@@ -30,14 +30,12 @@ pub async fn compile_project(args: CompileProjectArgs) -> Result<(), Box<dyn std
         }
 
         let files_map = files_to_errors(compile_errors);
-        dbg!(&files_map);
+        //dbg!(&files_map);
 
         for (file_path, errors) in  files_map {
             let full_path = workspace_root.join(file_path);
             correct_file(&full_path, errors)?;
         }
-
-        return Ok(())
     }
 }
 

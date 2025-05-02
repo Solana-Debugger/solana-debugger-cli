@@ -76,8 +76,15 @@ pub fn get_target_dir() -> PathBuf {
     get_cache_dir().join("target")
 }
 
+pub fn get_target_so_dir() -> PathBuf {
+    get_target_dir().join("sbf-solana-solana").join("release")
+}
+
 pub fn rm_target_dir() {
-    fs::remove_dir_all(get_target_dir()).unwrap()
+    let target_dir = get_target_dir();
+    if target_dir.is_dir() {
+        fs::remove_dir_all(get_target_dir()).unwrap()
+    }
 }
 
 pub fn get_config_path() -> PathBuf {
