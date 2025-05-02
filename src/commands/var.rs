@@ -1,5 +1,6 @@
 use std::path::PathBuf;
 use log::debug;
+use crate::compile::project::{compile_project, CompileProjectArgs};
 use crate::utils::debugger_cache::*;
 use crate::utils::debugee_project_info::get_program_info;
 use crate::utils::program_input::*;
@@ -56,7 +57,21 @@ pub(crate) async fn process_var(location: &str, line: usize, name: Option<&str>)
         inst_spec: InstProjectSpec::SingleLine { file: location_path, line },
     };
 
-    inst_project(inst_args)?;
+    let inst_info = inst_project(inst_args)?;
+
+    //dbg!(&inst_info);
+
+    //
+    // Compile
+    //
+
+    let compile_args = CompileProjectArgs {
+        program_path: inst_info.program_path,
+        workspace_root: inst_info.workspace_root,
+        target_dir: Some(get_target_dir())
+    };
+
+    compile_project(compile_args).await?;
 
     Ok(())
 }

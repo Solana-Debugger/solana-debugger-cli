@@ -1,6 +1,7 @@
 mod commands;
 mod utils;
 mod instrument;
+mod compile;
 
 use clap::*;
 

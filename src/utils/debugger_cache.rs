@@ -71,6 +71,11 @@ pub fn get_build_dir() -> PathBuf {
     get_cache_dir().join("build")
 }
 
+/// Custom target dir, outside of `build`
+pub fn get_target_dir() -> PathBuf {
+    get_cache_dir().join("target")
+}
+
 pub fn get_config_path() -> PathBuf {
     get_cache_dir().join("config.json")
 }
