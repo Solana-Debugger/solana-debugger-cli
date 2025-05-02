@@ -100,5 +100,38 @@ pub(crate) async fn process_var(location: &str, line: usize, name: Option<&str>)
 
     let line_vars = parse_program_output(program_output)?;
 
+    if line_vars.is_empty() {
+        eprintln!("No variables data: line was never hit");
+    } else {
+        println!();
+    }
+
+    for (j, item) in line_vars.iter().enumerate() {
+        println!("Hit {}", j+1);
+        println!("{}:{}", location, item.line_num);
+        match name {
+            None => {
+                for (i, node) in item.nodes.iter().enumerate() {
+                    print_debug_node_colored(node, 0);
+                    //print_debug_node(node, 0);
+                    if i < item.nodes.len() - 1 {
+                        println!();
+                    }
+                }
+            },
+            Some(name) => {
+                let node = item.nodes.iter().find(|n| n.name == name);
+                if let Some(node) = node {
+                    print_debug_node_colored(node, 0);
+                } else {
+                    println!("Variable {} not available", name);
+                }
+            }
+        }
+        if j < line_vars.len() - 1 {
+            println!();
+        }
+    }
+
     Ok(())
 }

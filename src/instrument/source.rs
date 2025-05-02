@@ -38,18 +38,17 @@ pub fn inst_source(input_path: &Path, output_path: &Path, inst_spec: &InstProjec
                     // TODO: should be something like "src/lib.rs"
                     let file_path_str = "".to_string();
 
-                    if is_main_module || path == file.to_owned() {
-                        let ast_spec = InstAstSpec {
-                            mod_fixed_serialization: is_main_module,
-                            feature_min_specialization: is_main_module,
-                            debugee_file_path: file_path_str,
-                            line_inst: Some(*line),
-                            custom_type_serialization: true
-                        };
-                        inst_source_file(&path, &new_output_file, &ast_spec)?;
-                    } else {
-                        fs::copy(&path, &new_output_file)?;
-                    }
+                    let line_inst = if path == file.to_owned() { Some(*line) } else { None };
+
+                    let ast_spec = InstAstSpec {
+                        mod_fixed_serialization: is_main_module,
+                        feature_min_specialization: is_main_module,
+                        debugee_file_path: file_path_str,
+                        line_inst,
+                        custom_type_serialization: true
+                    };
+
+                    inst_source_file(&path, &new_output_file, &ast_spec)?;
                 }
             }
         }
