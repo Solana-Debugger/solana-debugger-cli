@@ -70,7 +70,6 @@ impl VisitMut for CorrectContext {
                         eprintln!("{}", err.error_message);
                     }
                      */
-
                     *stmt = Stmt::Item(Item::Verbatim(TokenStream::new()));
                 }
                 self.errors = err_uncov

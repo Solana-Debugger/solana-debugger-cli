@@ -60,6 +60,7 @@ pub(crate) fn get_fixed_serialization() -> File {
         impl_serialize_int!(i32);
         impl_serialize_int!(i64);
         impl_serialize_int!(i128);
+        impl_serialize_int!(isize);
 
         macro_rules! impl_serialize_uint {
             ($type:ty) => {
@@ -80,6 +81,7 @@ pub(crate) fn get_fixed_serialization() -> File {
         impl_serialize_uint!(u32);
         impl_serialize_uint!(u64);
         impl_serialize_uint!(u128);
+        impl_serialize_uint!(usize);
 
         impl _SolanaDebuggerSerialize for bool {
             fn _solana_debugger_serialize(&self, name: &str) {
@@ -307,6 +309,34 @@ pub(crate) fn get_fixed_serialization() -> File {
             }
         }
 
+        impl<'a, T> _SolanaDebuggerSerialize for core::cell::Ref<'a, T> {
+            fn _solana_debugger_serialize(&self, name: &str) {
+                sol_log("START_NODE");
+                sol_log("complex");
+                sol_log(name);
+                sol_log(type_name_of_val(self));
+                sol_log("no_data");
+
+                crate::_solana_debugger_serialize::_SolanaDebuggerSerialize::_solana_debugger_serialize(&**self, "value");
+
+                sol_log("END_NODE");
+            }
+        }
+
+        impl<'a, T> _SolanaDebuggerSerialize for core::cell::RefMut<'a, T> {
+            fn _solana_debugger_serialize(&self, name: &str) {
+                sol_log("START_NODE");
+                sol_log("complex");
+                sol_log(name);
+                sol_log(type_name_of_val(self));
+                sol_log("no_data");
+
+                crate::_solana_debugger_serialize::_SolanaDebuggerSerialize::_solana_debugger_serialize(&**self, "value");
+
+                sol_log("END_NODE");
+            }
+        }
+
         impl<T, const N: usize> _SolanaDebuggerSerialize for [T; N] {
             fn _solana_debugger_serialize(&self, name: &str) {
                 sol_log("START_NODE");
@@ -362,5 +392,57 @@ pub(crate) fn get_fixed_serialization() -> File {
                 sol_log("END_NODE");
             }
         }
+
+        impl _SolanaDebuggerSerialize for solana_program::sysvar::rent::Rent {
+            fn _solana_debugger_serialize(&self, name: &str) {
+                sol_log("START_NODE");
+                sol_log("complex");
+                sol_log(name);
+                sol_log(type_name_of_val(self));
+
+                sol_log("no_data");
+
+                self.lamports_per_byte_year._solana_debugger_serialize("lamports_per_byte_year");
+                self.exemption_threshold._solana_debugger_serialize("exemption_threshold");
+                self.burn_percent._solana_debugger_serialize("burn_percent");
+
+                sol_log("END_NODE");
+            }
+        }
+
+        impl _SolanaDebuggerSerialize for solana_program::instruction::Instruction {
+            fn _solana_debugger_serialize(&self, name: &str) {
+                sol_log("START_NODE");
+                sol_log("complex");
+                sol_log(name);
+                sol_log(type_name_of_val(self));
+
+                sol_log("no_data");
+
+                self.program_id._solana_debugger_serialize("program_id");
+                self.accounts._solana_debugger_serialize("accounts");
+                self.data._solana_debugger_serialize("data");
+
+                sol_log("END_NODE");
+            }
+        }
+
+        impl _SolanaDebuggerSerialize for solana_program::instruction::AccountMeta {
+            fn _solana_debugger_serialize(&self, name: &str) {
+                sol_log("START_NODE");
+                sol_log("complex");
+                sol_log(name);
+                sol_log(type_name_of_val(self));
+
+                sol_log("no_data");
+
+                self.pubkey._solana_debugger_serialize("pubkey");
+                self.is_signer._solana_debugger_serialize("is_signer");
+                self.is_writable._solana_debugger_serialize("is_writable");
+
+                sol_log("END_NODE");
+            }
+        }
+
     }
 }

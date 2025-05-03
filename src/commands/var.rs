@@ -111,8 +111,10 @@ pub(crate) async fn process_var(location: &str, line: usize, variable_filter: Va
 
     println!();
     for (j, item) in line_vars.iter().enumerate() {
-        println!("{}:{} ({})", location, item.line_num, j+1);
-        println!();
+        if line_vars.len() > 1 {
+            println!("{}:{} ({})", location, item.line_num, j + 1);
+            println!();
+        }
         //println!("Line hit {}", j+1);
         //println!("{}:{}", location, item.line_num);
         //println!();
