@@ -1,8 +1,8 @@
 [package]
-name = "solana-debugger-cli-demo"
+name = "solana-debugger-cli"
 version = "0.1.0"
 edition = "2021"
-description = "Demo of Solana Debugger CLI"
+description = "Solana Debugger CLI"
 authors = ["Maxim Schmidt <mail@maximschmidt.com>"]
 
 [dependencies]

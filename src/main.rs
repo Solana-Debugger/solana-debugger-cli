@@ -8,6 +8,7 @@ use clap::*;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+
     let mut cli = clap::Command::new(crate_name!())
         .about(crate_description!())
         .version(crate_version!())
@@ -27,12 +28,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 .arg(Arg::new("location")
                     .help("Location to inspect. Format: FILE:LINE, e.g. lib.rs:33 (without `src/`)")
                     .required(true))
-                .arg(Arg::new("variable_name")
-                    .help("Name of the variable to inspect. Leave empty to show all")
+                .arg(Arg::new("variable_names")
+                    .help("Name of variables to inspect. Leave empty to show all")
                     .required(false))
         );
 
-    let matches = cli.get_matches_mut();
+    let mut processed_args = get_processed_args();
+
+    let matches = cli.try_get_matches_from_mut(processed_args).unwrap_or_else(|e| e.exit());
 
     match matches.subcommand() {
         Some(("init", sub_m)) => subcommand_init(sub_m),
@@ -47,6 +50,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 }
 
+fn get_processed_args() -> Vec<String> {
+    let mut args: Vec<String> = std::env::args().collect();
+
+    if args.len() > 1 && try_get_file_line_format(&args[1]).is_ok() {
+        args.insert(1, "var".to_string());
+    }
+
+    args
+}
+
 fn subcommand_init(matches: &ArgMatches) -> Result<(), Box<dyn std::error::Error>> {
     let program_path = matches.get_one::<String>("program_path").unwrap();
     let input_path = matches.get_one::<String>("input_path").unwrap();
@@ -59,7 +72,22 @@ fn subcommand_init(matches: &ArgMatches) -> Result<(), Box<dyn std::error::Error
 async fn subcommand_var(matches: &ArgMatches) -> Result<(), Box<dyn std::error::Error>> {
     let location_str = matches.get_one::<String>("location").unwrap();
 
-    let split: Vec<&str> = location_str.rsplitn(2, ':').collect();
+    let (file_path, line_number) = try_get_file_line_format(&location_str)?;
+
+    // We assume that the source files are stored in `src`
+    // We prepend `src/` for convenience
+    let file_path = "src/".to_string() + file_path.as_str();
+
+    let variable_name = matches.get_many::<String>("variable_names").map(|v| v.as_str());
+
+    //commands::var::process_var(&file_path, line_number, variable_name).await?;
+
+    Ok(())
+}
+
+fn try_get_file_line_format(input: &str) -> Result<(String, usize), String> {
+
+    let split: Vec<String> = input.rsplitn(2, ':').map(|v| v.to_string()).collect();
 
     if split.len() != 2 {
         Err("Invalid format of location")?;
@@ -68,15 +96,7 @@ async fn subcommand_var(matches: &ArgMatches) -> Result<(), Box<dyn std::error::
     let line_number = split[0].parse::<usize>()
         .map_err(|_| format!("Invalid line number: {}", split[0]))?;
 
-    let file_path = split[1];
+    let file_path = split[1].clone();
 
-    // We assume that the source files are stored in `src`
-    // We prepend `src/` for convenience
-    let file_path = "src/".to_string() + file_path;
-
-    let variable_name = matches.get_one::<String>("variable_name").map(|v| v.as_str());
-
-    commands::var::process_var(&file_path, line_number, variable_name).await?;
-
-    Ok(())
+    Ok((file_path, line_number))
 }

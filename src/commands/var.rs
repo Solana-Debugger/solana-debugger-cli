@@ -107,7 +107,7 @@ pub(crate) async fn process_var(location: &str, line: usize, name: Option<&str>)
     }
 
     for (j, item) in line_vars.iter().enumerate() {
-        println!("Hit {}", j+1);
+        println!("Line hit {}", j+1);
         println!("{}:{}", location, item.line_num);
         match name {
             None => {
