@@ -25,6 +25,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     .required(true))
         )
         .subcommand(
+            Command::new("status")
+                .about("Show debug configuration")
+        )
+        .subcommand(
             Command::new("var")
                 .about("Inspect the value of variables")
                 .arg(Arg::new("location")
@@ -42,6 +46,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     match matches.subcommand() {
         Some(("init", sub_m)) => subcommand_init(sub_m),
+        Some(("status", sub_m)) => subcommand_status(sub_m),
         Some(("var", sub_m)) => subcommand_var(sub_m).await,
         _ => {
             eprintln!("Invalid subcommand. Help:");
@@ -72,6 +77,11 @@ fn subcommand_init(matches: &ArgMatches) -> Result<(), Box<dyn std::error::Error
     Ok(())
 }
 
+fn subcommand_status(matches: &ArgMatches) -> Result<(), Box<dyn std::error::Error>> {
+    commands::status::process_status()?;
+    Ok(())
+}
+
 async fn subcommand_var(matches: &ArgMatches) -> Result<(), Box<dyn std::error::Error>> {
     let location_str = matches.get_one::<String>("location").unwrap();
 
@@ -85,7 +95,6 @@ async fn subcommand_var(matches: &ArgMatches) -> Result<(), Box<dyn std::error::
         None => VariableFilter::All,
         Some(v) => Select(v.map(|s| s.clone()).collect())
     };
-
     //dbg!(&variable_filter);
 
     commands::var::process_var(&file_path, line_number, variable_filter).await?;

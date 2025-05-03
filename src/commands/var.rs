@@ -1,4 +1,5 @@
 use std::path::PathBuf;
+use colored::Colorize;
 use log::debug;
 use crate::compile::project::{compile_project, CompileProjectArgs};
 use crate::utils::debugger_cache::*;
@@ -22,11 +23,8 @@ pub(crate) async fn process_var(location: &str, line: usize, variable_filter: Va
     if !get_cache_dir().is_dir() {
         Err("Cache directory does not exist. Run 'init' to create it")?
     }
-
     let config: DebuggerConfig = DebuggerConfig::load_from_file(&get_config_path())?;
-
     //dbg!(&config);
-
     config.validate()?;
 
     // Validate location
@@ -35,15 +33,13 @@ pub(crate) async fn process_var(location: &str, line: usize, variable_filter: Va
         Err(format!("Debug location {} does not exist", location_path.display()))?
     }
 
-    // Must be before load_input_from_folder
+    // Must be set before load_input_from_folder
     let output_log = set_output_logger()?;
 
     let program_input = load_input_from_folder(&config.input_path).await?;
-
     //dbg!(&program_input);
 
     let debugee_project_info = get_program_info(&config.program_path)?;
-
     //dbg!(&debugee_project_info);
 
     //
@@ -72,6 +68,8 @@ pub(crate) async fn process_var(location: &str, line: usize, variable_filter: Va
     let inst_info = inst_project(inst_args)?;
 
     //dbg!(&inst_info);
+
+    //return Ok(());
 
     //
     // Compile
@@ -107,14 +105,17 @@ pub(crate) async fn process_var(location: &str, line: usize, variable_filter: Va
     let line_vars = parse_program_output(program_output)?;
 
     if line_vars.is_empty() {
-        eprintln!("No variables data since no location is never hit");
-    } else {
-        println!();
+        eprintln!("No variables data (location was never hit)");
+        return Ok(());
     }
 
+    println!();
     for (j, item) in line_vars.iter().enumerate() {
-        println!("Line hit {}", j+1);
-        println!("{}:{}", location, item.line_num);
+        println!("{}:{} ({})", location, item.line_num, j+1);
+        println!();
+        //println!("Line hit {}", j+1);
+        //println!("{}:{}", location, item.line_num);
+        //println!();
 
         match &variable_filter {
             VariableFilter::All => {
@@ -143,43 +144,6 @@ pub(crate) async fn process_var(location: &str, line: usize, variable_filter: Va
             }
         }
 
-        /*
-        let filtered_nodesko = item.nodes.iter().filter(|n|
-            match &variable_filter {
-                VariableFilter::All => true,
-                VariableFilter::Select(v) => v.contains(&n.name)
-            }
-        );
-
-        for (i, node) in filtered_nodes.enumerate() {
-            print_debug_node_colored(node, 0);
-            //print_debug_node(node, 0);
-            if i < item.nodes.len() - 1 {
-                println!();
-            }
-        }
-         */
-        /*
-        match name {
-            None => {
-                for (i, node) in item.nodes.iter().enumerate() {
-                    print_debug_node_colored(node, 0);
-                    //print_debug_node(node, 0);
-                    if i < item.nodes.len() - 1 {
-                        println!();
-                    }
-                }
-            },
-            Some(name) => {
-                let node = item.nodes.iter().find(|n| n.name == name);
-                if let Some(node) = node {
-                    print_debug_node_colored(node, 0);
-                } else {
-                    println!("Variable {} not available", name);
-                }
-            }
-        }
-         */
         if j < line_vars.len() - 1 {
             println!();
         }

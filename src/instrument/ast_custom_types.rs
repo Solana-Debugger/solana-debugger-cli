@@ -35,7 +35,10 @@ fn insert_serialize_impl(items: &mut Vec<Item>) {
                 items.insert(i+1, syn::Item::Impl(crate::instrument::custom_types::structs::get_serialize_impl(val)));
                 i += 2
             },
-            // TODO: ItemEnum
+            Item::Enum(val) => {
+                items.insert(i+1, syn::Item::Impl(crate::instrument::custom_types::enums::get_serialize_impl(val)));
+                i += 2
+            },
             _ => {
                 i += 1
             }

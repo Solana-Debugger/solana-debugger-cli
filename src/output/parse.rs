@@ -91,6 +91,7 @@ fn clean_program_output(output: Vec<String>) -> Vec<String> {
 }
 
 fn parse_line_vars_nodes(mut input: VecDeque<String>) -> Result<Vec<DebugNode>, OutputParseError> {
+    dbg!(&input);
     let mut result = Vec::new();
     while !input.is_empty() {
         result.push(consume_debug_node(&mut input)?);

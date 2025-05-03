@@ -6,7 +6,6 @@ pub fn get_serialize_impl(node: &ItemStruct) -> ItemImpl {
     let name = &node.ident;
     let fields = &node.fields;
 
-    // Generate the field serialization code based on the struct fields
     let serialize_fields = match fields {
         syn::Fields::Named(fields_named) => {
             let field_statements = fields_named.named.iter().map(|field| {
