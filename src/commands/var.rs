@@ -7,7 +7,13 @@ use crate::utils::program_input::*;
 use crate::instrument::*;
 use crate::output::*;
 
-pub(crate) async fn process_var(location: &str, line: usize, name: Option<&str>) -> Result<(), Box<dyn std::error::Error>> {
+#[derive(Debug)]
+pub enum VariableFilter {
+    All,
+    Select(Vec<String>)
+}
+
+pub(crate) async fn process_var(location: &str, line: usize, variable_filter: VariableFilter) -> Result<(), Box<dyn std::error::Error>> {
 
     //
     // Input Validation
@@ -101,7 +107,7 @@ pub(crate) async fn process_var(location: &str, line: usize, name: Option<&str>)
     let line_vars = parse_program_output(program_output)?;
 
     if line_vars.is_empty() {
-        eprintln!("No variables data: line was never hit");
+        eprintln!("No variables data since no location is never hit");
     } else {
         println!();
     }
@@ -109,6 +115,51 @@ pub(crate) async fn process_var(location: &str, line: usize, name: Option<&str>)
     for (j, item) in line_vars.iter().enumerate() {
         println!("Line hit {}", j+1);
         println!("{}:{}", location, item.line_num);
+
+        match &variable_filter {
+            VariableFilter::All => {
+                for (i, node) in item.nodes.iter().enumerate() {
+                    print_debug_node_colored(node, 0);
+                    if i < item.nodes.len() - 1 {
+                        println!();
+                    }
+                }
+            }
+            VariableFilter::Select(vars) => {
+                let vars_len = vars.len();
+                for (i, var) in vars.iter().enumerate() {
+                    match item.nodes.iter().find(|&n| *var == n.name) {
+                        Some(node) => {
+                            print_debug_node_colored(node, 0);
+                        }
+                        None => {
+                            println!("Variable {} not available", var);
+                        }
+                    }
+                    if i < vars_len - 1 {
+                        println!();
+                    }
+                }
+            }
+        }
+
+        /*
+        let filtered_nodesko = item.nodes.iter().filter(|n|
+            match &variable_filter {
+                VariableFilter::All => true,
+                VariableFilter::Select(v) => v.contains(&n.name)
+            }
+        );
+
+        for (i, node) in filtered_nodes.enumerate() {
+            print_debug_node_colored(node, 0);
+            //print_debug_node(node, 0);
+            if i < item.nodes.len() - 1 {
+                println!();
+            }
+        }
+         */
+        /*
         match name {
             None => {
                 for (i, node) in item.nodes.iter().enumerate() {
@@ -128,6 +179,7 @@ pub(crate) async fn process_var(location: &str, line: usize, name: Option<&str>)
                 }
             }
         }
+         */
         if j < line_vars.len() - 1 {
             println!();
         }

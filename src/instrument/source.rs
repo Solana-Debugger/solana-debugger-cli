@@ -7,7 +7,7 @@ use crate::instrument::*;
 
 pub fn inst_source(input_path: &Path, output_path: &Path, inst_spec: &InstProjectSpec) -> Result<(), Box<dyn std::error::Error>> {
     if let InstProjectSpec::SingleLine { .. } = inst_spec {
-        write_fixed_serialization_file(&input_path.join("_solana_debugger_serialize.rs"))?;
+        write_fixed_serialization_file(&output_path.join("_solana_debugger_serialize.rs"))?;
     }
 
     let mut queue = VecDeque::<(PathBuf, PathBuf)>::new();

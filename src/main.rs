@@ -5,6 +5,8 @@ mod compile;
 mod output;
 
 use clap::*;
+use crate::commands::var::VariableFilter;
+use crate::commands::var::VariableFilter::*;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -30,7 +32,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     .required(true))
                 .arg(Arg::new("variable_names")
                     .help("Name of variables to inspect. Leave empty to show all")
-                    .required(false))
+                    .required(false)
+                    .action(ArgAction::Append))
         );
 
     let mut processed_args = get_processed_args();
@@ -78,9 +81,14 @@ async fn subcommand_var(matches: &ArgMatches) -> Result<(), Box<dyn std::error::
     // We prepend `src/` for convenience
     let file_path = "src/".to_string() + file_path.as_str();
 
-    let variable_name = matches.get_many::<String>("variable_names").map(|v| v.as_str());
+    let variable_filter = match matches.get_many::<String>("variable_names") {
+        None => VariableFilter::All,
+        Some(v) => Select(v.map(|s| s.clone()).collect())
+    };
 
-    //commands::var::process_var(&file_path, line_number, variable_name).await?;
+    //dbg!(&variable_filter);
+
+    commands::var::process_var(&file_path, line_number, variable_filter).await?;
 
     Ok(())
 }
