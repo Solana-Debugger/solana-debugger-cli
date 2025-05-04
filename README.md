@@ -61,8 +61,8 @@ What's so cool about this debugger?
 
 Debuggers usually work by interrupting the execution of a program and allowing the user to inspect its memory via some source mapping like DWARF. This is not what we do here.
 
-Instead, what we do is essentially automated printf debugging: We instrument the program in clever ways, run it through the SWM, capture its output and present it to the user.
+Instead, we do this: We instrument the program in clever ways (i.e. add logging statements), run it through the SVM, capture its output and present it to the user. Think of it as an automated way to do printf debugging.
 
-This means: 100% reliable outputs, you can set breakpoints at any line, compiler optimization doesn't get in the way, you can get other traces like compute units, it can deal with libraries that use code generation (Anchor!), you have access to any variable that you'd have access to in the Rust program.
+This means: 100% reliable outputs, you can set breakpoints at any line, you have access to any variable that you'd have access to in the Rust program, compiler optimization never get in the way, you can get other traces like compute unit consumption, it can deal with frameworks that use code generation (Anchor!), CPIs can be debugged as you would expect.
 
-While this is an unconventional approach, it allows for more robust and reliable source-level debugging.
+While this is an unconventional approach, it allows for robust and reliable source-level debugging.
