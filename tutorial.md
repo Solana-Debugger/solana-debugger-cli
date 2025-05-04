@@ -4,9 +4,21 @@
 
 This was tested under Solana v2.1.9. Change it if needed:
 ```
-solana-install 2.1.9
+agave-install init 2.1.0
 ```
-`agave-install init 2.1.0`
+
+I tested this with Rust toolchain v1.84.0
+
+Install the tool:
+```
+git clone https://github.com/Solana-Debugger/solana-debugger-cli
+```
+```
+cd solana-debugger-cli
+```
+```
+cargo build
+```
 
 ## Delta counter program
 
