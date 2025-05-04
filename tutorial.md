@@ -122,4 +122,6 @@ $ solana-debugger tools/spl_token.rs:80 create_account_instruction initialize_ac
 
 This should show two line hits. Each of them should show both instructions (print two variables).
 
+Note that the `program_id`s are indeed `11111111111111111111111111111111` and `TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA`.
+
 So, for each of the two tokens created, this command shows both instructions to do that.
