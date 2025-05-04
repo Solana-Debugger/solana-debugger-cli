@@ -8,9 +8,9 @@ It will support the following features:
 - evaluate arbitrary Rust expressions at specified locations
 - it can be used as debugger backend of another system (e.g. an IDE plugin)
 
-[Showcase](https://x.com/maximschmidt94/status/1914802590568562965)
+[Video](https://x.com/maximschmidt94/status/1914802590568562965)
 
-**If you want to try this yourself, check out the [tutorial](tutorial.md)**
+**If you want to try this out yourself, check out the [tutorial](tutorial.md).**
 
 ## Status
 
@@ -61,8 +61,8 @@ What's so cool about this debugger?
 
 Debuggers usually work by interrupting the execution of a program and allowing the user to inspect its memory via some source mapping like DWARF. This is not what we do here.
 
-Instead, we do this: We instrument the program in clever ways (i.e. add logging statements), run it through the SVM, capture its output and present it to the user. Think of it as an automated way to do printf debugging.
+Instead, we do this: We instrument the program in clever ways (i.e. add logging statements), run it through the SVM, capture its output and present it to the user. Think of it as automated printf debugging.
 
-This means: 100% reliable outputs, you can set breakpoints at any line, you have access to any variable that you'd have access to in the Rust program, compiler optimization never get in the way, you can get other traces like compute unit consumption, it can deal with frameworks that use code generation (Anchor!), CPIs can be debugged as you would expect.
+This means: 100% reliable outputs, you can set breakpoints at any line, you have access to any variable that you'd have access to in the Rust program, compiler optimization never gets in the way, you can get other traces like compute unit consumption, it can deal with frameworks that use code generation (Anchor!), CPIs can be debugged as you would expect.
 
 While this is an unconventional approach, it allows for robust and reliable source-level debugging.
