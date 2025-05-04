@@ -10,6 +10,8 @@ It will support the following features:
 
 [Video](https://x.com/maximschmidt94/status/1914802590568562965)
 
+[Screenshot](screenshot.png)
+
 **If you want to try this out yourself, check out the [tutorial](tutorial.md).**
 
 ## Status
