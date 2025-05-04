@@ -32,7 +32,7 @@ Since creating this input can be hard, we provide a method to [generate inputs f
 $ git clone https://github.com/Solana-Debugger/solana-debugger-cli
 $ cd solana-debugger-cli
 $ cargo build
-$ ln -s `realpath target/debug/solana-debugger-cli` ~/bin
+$ ln -s `realpath target/debug/solana-debugger-cli` ~/bin/solana-debugger
 ```
 
 ## Usage
@@ -59,8 +59,10 @@ $ solana-debugger lib.rs:33 var1 var2
 
 What's so cool about this debugger?
 
-Usually, debuggers use a gdb server with DWARF. This is not what we do here. Instead, we instrument the program in clever ways and run it through the regular VM and capture its output. You can think of this as automated printf debugging.
+Debuggers usually work by interrupting the execution of a program and allowing the user to inspect its memory via some source mapping like DWARF. This is not what we do here.
 
-This means: 100% reliable outputs, you can set breakpoints at any line, you have access to any variable values that you'd have access to in the Rust program.
+Instead, what we do is essentially automated printf debugging: We instrument the program in clever ways, run it through the SWM, capture its output and present it to the user.
 
-This allows for convenient source-level debugging.
+This means: 100% reliable outputs, you can set breakpoints at any line, compiler optimization doesn't get in the way, you can get other traces like compute units, it can deal with libraries that use code generation (Anchor!), you have access to any variable that you'd have access to in the Rust program.
+
+While this is an unconventional approach, it allows for more robust and reliable source-level debugging.
