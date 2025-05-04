@@ -6,6 +6,7 @@ This was tested under Solana v2.1.9. Change it if needed:
 ```
 solana-install 2.1.9
 ```
+`agave-install init 2.1.0`
 
 ## Delta counter program
 

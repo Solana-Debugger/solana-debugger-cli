@@ -2,29 +2,29 @@
 
 This is a CLI tool to debug Solana programs.
 
-The following features are planned:
-- inspect the value of variables at a location (similar to breakpoints + inspect)
+It will support the following features:
+- inspect the value of a variable at a breakpoint
 - display the call stack
 - evaluate arbitrary Rust expressions at specified locations
-- backend mode: it should be useable as a component in a different system (e.g. for an IDE plugin)
+- it can be used as debugger backend of another system (e.g. an IDE plugin)
 
-[Showcase video](https://x.com/maximschmidt94/status/1914802590568562965)
+[Showcase](https://x.com/maximschmidt94/status/1914802590568562965)
 
-**If you want to try this yourself, check out [the tutorial](tutorial.md)**
+**If you want to try this yourself, check out the [tutorial](tutorial.md)**
 
 ## Status
 
 Current stage of development: pre-alpha
 
-This project is under active development. Many features have not been implemented yet (call stack, expression evaluation etc.). Only variable inspection works right now.
+This project is under active development. Only variable inspection works right now.
 
-## Input
+## Program input
 
 To run the debugger, you must specify the entire input to the Solana program (accounts, signers, transaction).
 
-We use a format that should be familiar to Solana devs. [Here are some examples](https://github.com/Solana-Debugger/delta-counter-program-example/tree/main/debug_input).
+We use a format that is compatible with other Solana tools and should be familiar to Solana devs. [Here is an example](https://github.com/Solana-Debugger/delta-counter-program-example/tree/main/debug_input/increase_counter_from_0_by_100).
 
-Since creating this input manually is hard, we provide a module to [generate inputs from tests](https://github.com/Solana-Debugger/save-input).
+Since creating this input can be hard, we provide a method to [generate inputs from tests](https://github.com/Solana-Debugger/save-input).
 
 ## Installation
 
@@ -47,10 +47,20 @@ To inspect variables, use this:
 $ solana-debugger file_path:line [variable, ...]
 ```
 
-`file_path`, is relative to the `src` folder
+`file_path` is relative to the program's `src` folder
 
 Example:
 ```
 $ solana-debugger init token/program input/transfer_tokens
 $ solana-debugger lib.rs:33 var1 var2
 ```
+
+## Internals
+
+What's so cool about this debugger?
+
+Usually, debuggers use a gdb server with DWARF. This is not what we do here. Instead, we instrument the program in clever ways and run it through the regular VM and capture its output. You can think of this as automated printf debugging.
+
+This means: 100% reliable outputs, you can set breakpoints at any line, you have access to any variable values that you'd have access to in the Rust program.
+
+This allows for convenient source-level debugging.
