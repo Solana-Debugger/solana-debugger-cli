@@ -12,7 +12,28 @@ It will support the following features:
 
 [Screenshot](screenshot.png)
 
-**If you want to try this out yourself, check out the [tutorial](tutorial.md).**
+## Quick Test
+
+If you just want to see that it works:
+
+```
+$ mkdir tmp
+$ cd tmp
+$ git clone https://github.com/Solana-Debugger/solana-debugger-cli
+$ cd solana-debugger-cli 
+$ cargo build
+$ cd ..
+$ git clone https://github.com/Solana-Debugger/delta-counter-program-example
+$ cd delta-counter-program-example
+$ ../solana-debugger-cli/target/debug/solana-debugger-cli init delta-counter debug_input/create_counter
+$ ../solana-debugger-cli/target/debug/solana-debugger-cli entrypoint.rs:18
+```
+
+This should print `program_id`, `accounts` and `instruction_data`.
+
+## Tutorial
+
+For a demonstration of all features, check out the [tutorial](tutorial.md).
 
 ## Status
 
