@@ -1,5 +1,7 @@
 # Solana Debugger CLI
 
+![Solana Debugger CLI screenshot](inline-screenshot.png)
+
 This is a CLI tool to debug Solana programs.
 
 It will support the following features:
