@@ -24,6 +24,8 @@ If you just want to see that it works:
 $ agave-install init 2.1.9
 $ mkdir tmp
 $ cd tmp
+# force installation of platform-tools
+$ cargo new myproject && cd myproject && cargo-build-sbf && cd .. && rm -rf myproject
 $ git clone https://github.com/Solana-Debugger/solana-debugger-cli
 $ cd solana-debugger-cli 
 $ cargo build
@@ -96,7 +98,7 @@ What's so cool about this debugger?
 
 Debuggers usually work by interrupting the execution of a program and allowing the user to inspect its memory via some source mapping like DWARF. This is not what we do here.
 
-Instead, we do this: We instrument the program in clever ways (i.e. add logging statements), run it through the SVM, capture its output and present it to the user. Think of it as automated printf debugging.
+Instead, we do this: We instrument the program in clever ways (i.e. add log statements), run it through the SVM, capture its output and present it to the user. Think of it as automated printf debugging.
 
 This means: 100% reliable outputs, you can set breakpoints at any line, you have access to any variable that you'd have access to in the Rust program, compiler optimization never gets in the way, you can get other traces like compute unit consumption, it can deal with frameworks that use code generation (Anchor!), CPIs can be debugged as you would expect.
 

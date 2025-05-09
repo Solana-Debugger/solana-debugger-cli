@@ -7,7 +7,18 @@ This was tested under Solana v2.1.9. You may need to change your version:
 $ agave-install init 2.1.9
 ```
 
-Install the tool:
+Ensure that you have the right `platform-tools` version installed:
+```
+$ cargo new myproject && cd myproject && cargo-build-sbf && cd .. && rm -rf myproject
+```
+
+To verify, check that you get this output:
+```
+$ rustc +solana --version
+rustc 1.79.0-dev
+```
+
+Install Solana Debugger CLI:
 ```
 $ git clone https://github.com/Solana-Debugger/solana-debugger-cli
 $ cd solana-debugger-cli
