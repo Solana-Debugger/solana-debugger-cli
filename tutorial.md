@@ -16,7 +16,7 @@ rustc 1.79.0-dev
 If you don't get this output, you can force it to be installed like this:
 ```
 $ git clone https://github.com/Solana-Debugger/delta-counter-program-example
-$ cd delta-counter-program-example
+$ cd delta-counter-program-example/delta-counter
 $ cargo-build-sbf
 ```
 
