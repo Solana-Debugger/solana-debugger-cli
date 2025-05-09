@@ -35,6 +35,11 @@ This should print `program_id`, `accounts` and `instruction_data`.
 
 For a demonstration of all features, check out the [tutorial](tutorial.md).
 
+It uses two example programs specifically made to be tested with the Solana Debugger:
+
+* [Delta counter program](https://github.com/Solana-Debugger/delta-counter-program-example)
+* [Governance program](https://github.com/Solana-Debugger/governance-program-example)
+
 ## Status
 
 Current stage of development: pre-alpha
