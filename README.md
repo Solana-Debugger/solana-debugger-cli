@@ -21,6 +21,7 @@ It will support the following features:
 If you just want to see that it works:
 
 ```
+$ agave-install init 2.1.9
 $ mkdir tmp
 $ cd tmp
 $ git clone https://github.com/Solana-Debugger/solana-debugger-cli
@@ -34,6 +35,8 @@ $ ../solana-debugger-cli/target/debug/solana-debugger-cli entrypoint.rs:18
 ```
 
 This should print `program_id`, `accounts` and `instruction_data`.
+
+For details, see the [tutorial](tutorial.md).
 
 ## Tutorial
 
