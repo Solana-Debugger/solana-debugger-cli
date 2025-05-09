@@ -3,10 +3,10 @@
 This is a CLI tool to debug Solana programs.
 
 It will support the following features:
-- inspect the value of a variable at a breakpoint
-- display the call stack
-- evaluate arbitrary Rust expressions at specified locations
-- it can be used as debugger backend of another system (e.g. an IDE plugin)
+- Inspect the value of a variable at a breakpoint
+- Display the call stack
+- Evaluate arbitrary Rust expressions at specified locations
+- It can be used as debugger backend of another system (e.g. an IDE plugin)
 
 ## Demo
 
