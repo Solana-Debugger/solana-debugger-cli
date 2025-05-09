@@ -31,7 +31,7 @@ $ cd ..
 $ git clone https://github.com/Solana-Debugger/delta-counter-program-example
 $ cd delta-counter-program-example
 # to force the installation of platform-tools (skip if not needed)
-$ cargo-build-sbf
+$ cd delta-counter; cargo-build-sbf; cd ..
 $ ../solana-debugger-cli/target/debug/solana-debugger-cli init delta-counter debug_input/create_counter
 $ ../solana-debugger-cli/target/debug/solana-debugger-cli entrypoint.rs:18
 ```
