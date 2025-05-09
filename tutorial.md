@@ -18,14 +18,13 @@ $ rustc +solana --version
 rustc 1.79.0-dev
 ```
 
-Install Solana Debugger CLI:
+Install Solana Debugger CLI (tested with the stable Rust toolchain v1.84.0):
 ```
 $ git clone https://github.com/Solana-Debugger/solana-debugger-cli
 $ cd solana-debugger-cli
 $ cargo build
 $ ln -s `realpath target/debug/solana-debugger-cli` ~/bin/solana-debugger
 ```
-This was tested using the stable Rust toolchain v1.84.0.
 
 ## Delta counter program
 
