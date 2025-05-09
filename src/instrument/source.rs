@@ -5,6 +5,7 @@ use std::io::Write;
 use std::path::{Path, PathBuf};
 use crate::instrument::*;
 
+#[allow(irrefutable_let_patterns)]
 pub fn inst_source(input_path: &Path, output_path: &Path, inst_spec: &InstProjectSpec) -> Result<(), Box<dyn std::error::Error>> {
     if let InstProjectSpec::SingleLine { .. } = inst_spec {
         write_fixed_serialization_file(&output_path.join("_solana_debugger_serialize.rs"))?;

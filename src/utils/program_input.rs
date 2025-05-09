@@ -157,7 +157,7 @@ fn parse_transaction(tx_path: &Path) -> Result<Transaction, Box<dyn std::error::
 
     let transaction_input: TransactionInput = serde_json::from_str(&file_contents).map_err(|_| "Failed to deserialize transaction file")?;
 
-    Ok(transaction_input.try_into().map_err(|e| "Failed to parse public key")?)
+    Ok(transaction_input.try_into().map_err(|_| "Failed to parse public key")?)
 }
 
 async fn get_debugee_id(transaction: &Transaction) -> Option<Pubkey> {

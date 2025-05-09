@@ -5,6 +5,7 @@ use crate::instrument::{inst_ast_general, inst_ast_custom_types};
 pub struct InstAstSpec {
     pub mod_fixed_serialization: bool,
     pub feature_min_specialization: bool,
+    #[allow(dead_code)]
     pub debugee_file_path: String,
     pub line_inst: Option<usize>,
     pub custom_type_serialization: bool

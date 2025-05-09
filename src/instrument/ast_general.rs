@@ -2,7 +2,7 @@ use std::collections::HashSet;
 use proc_macro2::Ident;
 use quote::quote;
 use syn::fold::Fold;
-use syn::{parse_quote, Block, FnArg, ImplItemFn, Pat, PatIdent, PatTupleStruct, PatType, ReturnType, Signature, Stmt, File, ItemFn, parse2, ExprIf, Expr, ExprMatch, Arm};
+use syn::{parse_quote, Block, FnArg, ImplItemFn, Pat, PatIdent, PatTupleStruct, PatType, ReturnType, Signature, Stmt, File, ItemFn, parse2, ExprIf, Expr, Arm};
 use syn::spanned::Spanned;
 
 #[derive(Clone, Debug)]
@@ -14,7 +14,7 @@ struct InstContext {
 }
 
 /// TODO: should support execution path, a set of lines etc.
-pub fn inst_ast_general(mut file: File, line: usize) -> File {
+pub fn inst_ast_general(file: File, line: usize) -> File {
     let mut ctx = InstContext {
         bindings: Vec::new(),
         line
@@ -23,39 +23,21 @@ pub fn inst_ast_general(mut file: File, line: usize) -> File {
 }
 
 impl Fold for InstContext {
-
-    fn fold_impl_item_fn(&mut self, node: ImplItemFn) -> ImplItemFn
+    fn fold_arm(&mut self, node: Arm) -> Arm
     {
-        self.bindings = get_bindings_from_fn_sig(&node.sig);
-        syn::fold::fold_impl_item_fn(self, node)
-
-        /*
-        let inst_block = inst_fn_block(ctx.fold_block(node.block), &node.sig.output, &node.sig.ident, &self.file_path);
-        ImplItemFn {
-            attrs: self.fold_attributes(node.attrs),
-            vis: self.fold_visibility(node.vis),
-            defaultness: node.defaultness,
-            sig: self.fold_signature(node.sig),
-            block: inst_block,
+        let mut ctx = self.clone();
+        // Get the bindings introduced by the arm's pattern
+        match &node.pat {
+            // Heuristic:
+            // If the match arm only consists of a single Pat::Ident, this means it's likely a unit variant and not a new binding
+            // So, we ignore it.
+            Pat::Ident(_ident) => {},
+            _ => {
+                ctx.bindings.extend(get_bindings_from_pat(&node.pat));
+            }
         }
-         */
-        // Idea: first do fold_block, THEN add header and footer inst for the fn
-    }
 
-    fn fold_item_fn(&mut self, node: ItemFn) -> ItemFn
-    {
-        self.bindings = get_bindings_from_fn_sig(&node.sig);
-        syn::fold::fold_item_fn(self, node)
-
-        /*
-        let inst_block = inst_fn_block(ctx.fold_block(*node.block), &node.sig.output, &node.sig.ident, &self.file_path);
-        ItemFn {
-            attrs: self.fold_attributes(node.attrs),
-            vis: self.fold_visibility(node.vis),
-            sig: self.fold_signature(node.sig),
-            block: Box::new(inst_block),
-        }
-         */
+        syn::fold::fold_arm(&mut ctx, node)
     }
 
     fn fold_block(&mut self, mut node: Block) -> Block {
@@ -117,6 +99,24 @@ impl Fold for InstContext {
         node
     }
 
+    fn fold_impl_item_fn(&mut self, node: ImplItemFn) -> ImplItemFn
+    {
+        self.bindings = get_bindings_from_fn_sig(&node.sig);
+        syn::fold::fold_impl_item_fn(self, node)
+
+        /*
+        let inst_block = inst_fn_block(ctx.fold_block(node.block), &node.sig.output, &node.sig.ident, &self.file_path);
+        ImplItemFn {
+            attrs: self.fold_attributes(node.attrs),
+            vis: self.fold_visibility(node.vis),
+            defaultness: node.defaultness,
+            sig: self.fold_signature(node.sig),
+            block: inst_block,
+        }
+         */
+        // Idea: first do fold_block, THEN add header and footer inst for the fn
+    }
+
     /*
     We can skip this since the matchee doesn't introduce new bindings
     We can copy the context in the arms instead
@@ -132,21 +132,20 @@ impl Fold for InstContext {
     }
      */
 
-    fn fold_arm(&mut self, node: Arm) -> Arm
+    fn fold_item_fn(&mut self, node: ItemFn) -> ItemFn
     {
-        let mut ctx = self.clone();
-        // Get the bindings introduced by the arm's pattern
-        match &node.pat {
-            // Heuristic:
-            // If the match arm only consists of a single Pat::Ident, this means it's likely a unit variant and not a new binding
-            // So, we ignore it.
-            Pat::Ident(_ident) => {},
-            _ => {
-                ctx.bindings.extend(get_bindings_from_pat(&node.pat));
-            }
-        }
+        self.bindings = get_bindings_from_fn_sig(&node.sig);
+        syn::fold::fold_item_fn(self, node)
 
-        syn::fold::fold_arm(&mut ctx, node)
+        /*
+        let inst_block = inst_fn_block(ctx.fold_block(*node.block), &node.sig.output, &node.sig.ident, &self.file_path);
+        ItemFn {
+            attrs: self.fold_attributes(node.attrs),
+            vis: self.fold_visibility(node.vis),
+            sig: self.fold_signature(node.sig),
+            block: Box::new(inst_block),
+        }
+         */
     }
 }
 
@@ -186,7 +185,8 @@ fn get_bindings_from_pat(p: &Pat) -> Vec<Ident> {
 }
 
 // TODO: include this in the inst
-fn inst_fn_block(mut block: Block, return_type: &ReturnType, fn_name: &Ident, file_path: &str) -> Block {
+#[allow(dead_code)]
+fn inst_fn_block(block: Block, return_type: &ReturnType, fn_name: &Ident, file_path: &str) -> Block {
 
     let var_type = match return_type {
         ReturnType::Default => parse_quote! { () },

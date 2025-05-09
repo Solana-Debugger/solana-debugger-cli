@@ -1,5 +1,5 @@
 use quote::quote;
-use syn::{parse_quote, Item, ItemImpl, ItemStruct};
+use syn::{parse_quote, ItemImpl, ItemStruct};
 
 pub fn get_serialize_impl(node: &ItemStruct) -> ItemImpl {
 

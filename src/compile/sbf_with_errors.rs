@@ -7,8 +7,10 @@ use cargo_metadata::Message;
 #[derive(Debug, Clone)]
 pub struct CompileError {
     pub file_path: String,
+    #[allow(dead_code)]
     pub error_code: String,
     pub source_spans: Vec<Range<usize>>,
+    #[allow(dead_code)]
     pub error_message: String,
 }
 

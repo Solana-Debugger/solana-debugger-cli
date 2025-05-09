@@ -1,6 +1,6 @@
 use syn::{parse_quote, File};
 
-pub(crate) fn get_fixed_serialization() -> File {
+pub fn get_fixed_serialization() -> File {
     parse_quote! {
 
         use solana_program::log::{sol_log, sol_log_data};

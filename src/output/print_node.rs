@@ -3,6 +3,7 @@ use crate::output::parse::{DebugNode, DebugNodeType};
 
 const PRINT_MAX_CHILDREN: usize = 15;
 
+/*
 pub fn print_debug_node(node: &DebugNode, indent: usize) {
     let node_type = match node.node_type {
         DebugNodeType::Complex => "-",
@@ -23,6 +24,7 @@ pub fn print_debug_node(node: &DebugNode, indent: usize) {
         print_debug_node(child, indent + 1);
     }
 }
+ */
 
 pub fn print_debug_node_colored(node: &DebugNode, indent: usize) {
 

@@ -1,8 +1,7 @@
 use std::collections::VecDeque;
 use std::fs;
 use std::path::{Path, PathBuf};
-use crate::instrument::is_hidden_path;
-use crate::instrument::source::*;
+use crate::instrument::*;
 
 #[derive(Debug)]
 pub struct InstProjectArgs {
@@ -46,6 +45,7 @@ pub enum InstProjectSpec {
 pub struct InstProjectInfo {
     pub program_path: PathBuf,
     pub workspace_root: PathBuf,
+    #[allow(dead_code)]
     pub is_workspace: bool,
 }
 

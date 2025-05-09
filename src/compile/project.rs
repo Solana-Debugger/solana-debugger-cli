@@ -19,8 +19,8 @@ pub async fn compile_project(args: CompileProjectArgs) -> Result<(), Box<dyn std
     let CompileProjectArgs { program_path, workspace_root, target_dir } = args;
     let target_dir = target_dir.as_ref().map(|dir| dir.as_path());
 
-    /// Compile and correct approach
-    /// If the compiler returns an error, correct the respective files. Try to compile again. Do this until it compiles.
+    // Compile and correct approach
+    // If the compiler returns an error, correct the respective files. Try to compile again. Do this until it compiles.
     loop {
         let compile_errors = compile_sbf_with_errors(&program_path, target_dir).await?;
         //dbg!(&compile_errors);

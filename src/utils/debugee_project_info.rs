@@ -1,5 +1,5 @@
 use std::path::{Path, PathBuf};
-use cargo_metadata::{MetadataCommand, Target, TargetKind};
+use cargo_metadata::{MetadataCommand, TargetKind};
 
 #[derive(Debug)]
 pub struct DebugeeProjectInfo {

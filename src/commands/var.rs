@@ -1,6 +1,3 @@
-use std::path::PathBuf;
-use colored::Colorize;
-use log::debug;
 use crate::compile::project::{compile_project, CompileProjectArgs};
 use crate::utils::debugger_cache::*;
 use crate::utils::debugee_project_info::get_program_info;

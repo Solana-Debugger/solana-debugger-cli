@@ -5,7 +5,7 @@ use syn::fold::Fold;
 struct InstContext {
 }
 
-pub fn inst_ast_custom_types(mut file: File) -> File {
+pub fn inst_ast_custom_types(file: File) -> File {
     let mut ctx = InstContext {};
     ctx.fold_file(file)
 }

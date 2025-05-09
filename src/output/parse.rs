@@ -3,7 +3,6 @@ use std::fmt::Debug;
 use base64::Engine;
 use base64::engine::general_purpose;
 use solana_sdk::pubkey::Pubkey;
-use std::fmt::Display;
 
 #[derive(Debug)]
 pub enum DebugNodeType {

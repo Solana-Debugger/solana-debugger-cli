@@ -1,6 +1,5 @@
 use std::path::Path;
 use std::sync::{Arc, RwLock};
-use log::Log;
 use solana_program_test::{find_file, ProgramTest};
 use crate::utils::program_input::ProgramInput;
 
@@ -54,10 +53,10 @@ pub async fn generate_program_output(
         program_test.add_account(pubkey, account);
     }
 
-    let (mut banks_client, payer, recent_blockhash) = program_test.start().await;
+    let (banks_client, _payer, recent_blockhash) = program_test.start().await;
     let mut transaction = input.transaction;
     transaction.sign(&input.keypairs, recent_blockhash);
-    let tx_result = banks_client.process_transaction(transaction).await?;
+    let _tx_result = banks_client.process_transaction(transaction).await?;
     //dbg!(&tx_result);
 
     let output = output_log.read().unwrap().clone();

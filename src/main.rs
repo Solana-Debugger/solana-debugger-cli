@@ -40,7 +40,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     .action(ArgAction::Append))
         );
 
-    let mut processed_args = get_processed_args();
+    let processed_args = get_processed_args();
 
     let matches = cli.try_get_matches_from_mut(processed_args).unwrap_or_else(|e| e.exit());
 
@@ -77,7 +77,7 @@ fn subcommand_init(matches: &ArgMatches) -> Result<(), Box<dyn std::error::Error
     Ok(())
 }
 
-fn subcommand_status(matches: &ArgMatches) -> Result<(), Box<dyn std::error::Error>> {
+fn subcommand_status(_matches: &ArgMatches) -> Result<(), Box<dyn std::error::Error>> {
     commands::status::process_status()?;
     Ok(())
 }
