@@ -1,7 +1,5 @@
 # Solana Debugger CLI
 
-![Solana Debugger CLI screenshot](inline-screenshot.png)
-
 This is a CLI tool to debug Solana programs.
 
 It will support the following features:
@@ -9,6 +7,10 @@ It will support the following features:
 - display the call stack
 - evaluate arbitrary Rust expressions at specified locations
 - it can be used as debugger backend of another system (e.g. an IDE plugin)
+
+## Demo
+
+![Solana Debugger CLI screenshot](inline-screenshot.png)
 
 [Video](https://x.com/maximschmidt94/status/1914802590568562965)
 
