@@ -111,10 +111,10 @@ pub(crate) async fn process_var(location: &str, line: usize, variable_filter: Va
         if line_vars.len() > 1 {
             println!("{}:{} ({})", location, item.line_num, j + 1);
             println!();
+        } else {
+            println!("{}:{}", location, item.line_num);
+            println!();
         }
-        //println!("Line hit {}", j+1);
-        //println!("{}:{}", location, item.line_num);
-        //println!();
 
         match &variable_filter {
             VariableFilter::All => {
