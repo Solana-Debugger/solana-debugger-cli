@@ -2,7 +2,7 @@ use std::collections::HashSet;
 use proc_macro2::Ident;
 use quote::quote;
 use syn::fold::Fold;
-use syn::{parse_quote, Block, FnArg, ImplItemFn, Pat, PatIdent, PatTupleStruct, PatType, ReturnType, Signature, Stmt, File, ItemFn, parse2, ExprIf, Expr, Arm};
+use syn::*;
 use syn::spanned::Spanned;
 
 #[derive(Clone, Debug)]
@@ -177,11 +177,93 @@ fn get_bindings_from_pat(p: &Pat) -> Vec<Ident> {
         },
         Pat::Type(PatType { pat, .. }) => {
             bindings.extend(get_bindings_from_pat(&*pat));
-        }
+        },
+        Pat::Struct(PatStruct { fields, .. }) => {
+            for field in fields {
+                bindings.extend(get_bindings_from_pat(&field.pat));
+            }
+        },
+        Pat::Tuple(PatTuple { elems, .. }) => {
+            for el in elems {
+                bindings.extend(get_bindings_from_pat(el));
+            }
+        },
         // TODO: other cases
         _ => {}
     }
     bindings
+
+    /*
+    match p {
+        Pat::Ident(PatIdent { ident, subpat, .. }) => {
+            bindings.push(ident.clone());
+            // Handle optional sub-pattern (occurs in `binding @ SUBPATTERN`)
+            // Untested
+            if let Some((_, subpat)) = subpat {
+                bindings.extend(get_bindings_from_pat(&*subpat));
+            }
+        },
+        Pat::TupleStruct(PatTupleStruct { elems, .. }) => {
+            for el in elems {
+                bindings.extend(get_bindings_from_pat(el));
+            }
+        },
+        Pat::Type(PatType { pat, .. }) => {
+            bindings.extend(get_bindings_from_pat(&*pat));
+        },
+        Pat::Const(_) => {
+            // Const patterns don't bind variables
+        },
+        Pat::Lit(_) => {
+            // Literal patterns don't bind variables
+        },
+        Pat::Macro(_) => {
+            // Can't inspect inside a macro pattern
+        },
+        Pat::Or(PatOr { cases, .. }) => {
+            // For alternations like `a | b`, collect bindings from all cases
+            for case in cases {
+                bindings.extend(get_bindings_from_pat(case));
+            }
+        },
+        Pat::Paren(PatParen { pat, .. }) => {
+            bindings.extend(get_bindings_from_pat(&*pat));
+        },
+        Pat::Path(_) => {
+            // Path patterns (like enum variants) don't bind variables
+        },
+        Pat::Range(_) => {
+            // Range patterns don't bind variables
+        },
+        Pat::Reference(PatReference { pat, .. }) => {
+            bindings.extend(get_bindings_from_pat(&*pat));
+        },
+        Pat::Rest(_) => {
+            // Rest patterns (..) don't bind variables
+        },
+        Pat::Slice(PatSlice { elems, .. }) => {
+            for el in elems {
+                bindings.extend(get_bindings_from_pat(el));
+            }
+        },
+        Pat::Struct(PatStruct { fields, .. }) => {
+            for field in fields {
+                bindings.extend(get_bindings_from_pat(&field.pat));
+            }
+        },
+        Pat::Tuple(PatTuple { elems, .. }) => {
+            for el in elems {
+                bindings.extend(get_bindings_from_pat(el));
+            }
+        },
+        Pat::Verbatim(_) => {
+            // Can't inspect inside verbatim tokens
+        },
+        Pat::Wild(_) => {
+            // Wildcard patterns (_) don't bind variables
+        },
+    }
+     */
 }
 
 // TODO: include this in the inst
