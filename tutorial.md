@@ -7,18 +7,26 @@ This was tested under Solana v2.1.9. You may need to change your version:
 $ agave-install init 2.1.9
 ```
 
-Ensure that you have the right `platform-tools` version installed:
-```
-$ cargo new myproject && cd myproject && cargo-build-sbf && cd .. && rm -rf myproject
-```
-
-To verify, check that you get this output:
+Ensure that you have the right `platform-tools` version installed. To verify, check that you get this output:
 ```
 $ rustc +solana --version
 rustc 1.79.0-dev
 ```
 
-Install Solana Debugger CLI (tested with the stable Rust toolchain v1.84.0):
+If you don't get this output, you can force it to be installed like this:
+```
+$ git clone https://github.com/Solana-Debugger/delta-counter-program-example
+$ cd delta-counter-program-example
+$ cargo-build-sbf
+```
+
+Make sure that your system Rust is at least v1.84.0:
+```
+$ rustc --version
+rustc 1.84.0 (9fc6b4312 2025-01-07)
+```
+
+Install Solana Debugger CLI:
 ```
 $ git clone https://github.com/Solana-Debugger/solana-debugger-cli
 $ cd solana-debugger-cli

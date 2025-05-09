@@ -24,14 +24,14 @@ If you just want to see that it works:
 $ agave-install init 2.1.9
 $ mkdir tmp
 $ cd tmp
-# force installation of platform-tools
-$ cargo new myproject && cd myproject && cargo-build-sbf && cd .. && rm -rf myproject
 $ git clone https://github.com/Solana-Debugger/solana-debugger-cli
 $ cd solana-debugger-cli 
 $ cargo build
 $ cd ..
 $ git clone https://github.com/Solana-Debugger/delta-counter-program-example
 $ cd delta-counter-program-example
+# to force the installation of platform-tools (skip if not needed)
+$ cargo-build-sbf
 $ ../solana-debugger-cli/target/debug/solana-debugger-cli init delta-counter debug_input/create_counter
 $ ../solana-debugger-cli/target/debug/solana-debugger-cli entrypoint.rs:18
 ```
